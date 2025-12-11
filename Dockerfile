@@ -12,7 +12,7 @@ WORKDIR /app
 COPY composer.json composer.lock ./
 
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer --version=2.2.0
 
 # Install dependencies
 RUN composer install --no-dev --optimize-autoloader
