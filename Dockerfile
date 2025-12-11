@@ -2,10 +2,10 @@
 FROM php:7.4-fpm AS build
 
 RUN apt-get update && apt-get install -y \
-    zip unzip git curl libpq-dev libonig-dev libzip-dev
+    zip unzip git curl libzip-dev libpng-dev libonig-dev
 
-# Install required PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring zip
+# Install PHP extensions needed for Laravel + MySQL
+RUN docker-php-ext-install pdo pdo_mysql mbstring zip
 
 WORKDIR /app
 
@@ -14,6 +14,7 @@ COPY composer.json composer.lock ./
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
+# Install dependencies
 RUN composer install --no-dev --optimize-autoloader
 
 COPY . .
@@ -22,18 +23,19 @@ COPY . .
 FROM php:7.4-fpm
 
 RUN apt-get update && apt-get install -y \
-    nginx git curl zip unzip supervisor
+    nginx git curl zip unzip supervisor libzip-dev libpng-dev libonig-dev
 
-# Install extensions again
-RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring zip
+# Install required PHP extensions again (NO PostgreSQL)
+RUN docker-php-ext-install pdo pdo_mysql mbstring zip
 
 WORKDIR /var/www/html
+
 COPY --from=build /app ./
 
 # Copy Nginx configuration
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
-# Supervisor to run Nginx + PHP-FPM
+# Supervisor config (runs PHP-FPM + Nginx)
 COPY docker/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
 
 EXPOSE 10000
