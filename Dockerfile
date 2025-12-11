@@ -14,10 +14,11 @@ COPY composer.json composer.lock ./
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer --version=2.2.0
 
+COPY . .
 # Install dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-COPY . .
+
 
 # -------- Stage 2: Production Image --------
 FROM php:7.4-fpm
