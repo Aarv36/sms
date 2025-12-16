@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
     nodejs npm
 
 # Install required PHP extensions
-RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring zip
+RUN docker-php-ext-install pdo pdo_mysql mbstring zip
 
 WORKDIR /app
 
@@ -30,7 +30,7 @@ RUN apt-get update && apt-get install -y \
     nginx supervisor zip unzip curl libzip-dev libpng-dev libonig-dev
 
 # Install extensions again
-RUN docker-php-ext-install pdo pdo_mysql pdo_pgsql mbstring zip
+RUN docker-php-ext-install pdo pdo_mysql mbstring zip
 
 WORKDIR /var/www/html
 COPY --from=build /app ./
