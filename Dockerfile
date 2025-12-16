@@ -16,11 +16,11 @@ COPY package.json package-lock.json* ./
 # Install Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer
 
+COPY . .
+
 RUN composer install --no-dev --optimize-autoloader
 
 RUN npm install
-
-COPY . .
 
 RUN npm run prod
 # -------- Stage 2: Production Image --------
